@@ -52,3 +52,7 @@ public class Main {
         SummerApplication.run(webDir, isJarFile ? "tmp-webapp" : "target/classes", HelloConfiguration.class, args);
     }
 }
+
+// 工作目录设置为：$MODULE_DIR$
+
+// 将组件的创建+配置与组件的使用相分离，并且，由IoC容器负责管理组件的生命周期。
