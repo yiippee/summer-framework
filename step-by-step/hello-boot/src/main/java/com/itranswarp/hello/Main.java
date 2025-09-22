@@ -18,6 +18,7 @@ public class Main {
     public static void main(String[] args) throws Exception {
         // 判定是否从jar/war启动:
         String jarFile = Main.class.getProtectionDomain().getCodeSource().getLocation().getFile();
+        System.out.println("jarFile: " + jarFile);
         boolean isJarFile = jarFile.endsWith(".war") || jarFile.endsWith(".jar");
         // 定位webapp根目录:
         String webDir = isJarFile ? "tmp-webapp" : "src/main/webapp";
@@ -25,7 +26,8 @@ public class Main {
             // 解压到tmp-webapp:
             Path baseDir = Paths.get(webDir).normalize().toAbsolutePath();
             if (Files.isDirectory(baseDir)) {
-                Files.delete(baseDir);
+                // Files.delete(baseDir);
+                Files.walk(baseDir).sorted(Comparator.reverseOrder()).map(Path::toFile).forEach(File::delete);
             }
             Files.createDirectories(baseDir);
             System.out.println("extract to: " + baseDir);
@@ -34,7 +36,7 @@ public class Main {
                 for (JarEntry entry : entries) {
                     Path res = baseDir.resolve(entry.getName());
                     if (!entry.isDirectory()) {
-                        System.out.println(res);
+                        System.out.println("path: " + res);
                         Files.createDirectories(res.getParent());
                         Files.copy(jar.getInputStream(entry), res);
                     }
